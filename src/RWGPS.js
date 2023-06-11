@@ -57,7 +57,7 @@ class RWGPS {
     const leaders = getLeaderNames(responses[2]);
     participants.forEach(p => {
       const li = leaders.findIndex(l => {
-        compareNames(l, p) === 0;
+        return compareNames(l, p) === 0;
       });
       if (li !== -1) {
         p.leader = true;
