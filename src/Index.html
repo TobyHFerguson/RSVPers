@@ -4,17 +4,16 @@
     <base target="_top">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
   </head>
-  <h1><?= event.title ?></h1>
+  <h1><?= event.name ?></h1>
   <body>
     <table>
       <? for (var i = 0; i < event.participants.length; i++) { ?>
         <tr>
           <td>
-            <? if (event.leaders.includes(event.participants[i])) { ?>
-              <b><?= event.participants[i] ?></b>
-            <? } else { ?>
-              <?= event.participants[i] ?>
-            <? } ?>
+              <?= event.participants[i].first_name ?>
+          </td>
+          <td>
+              <?= event.participants[i].last_name ?>
           </td>
         </tr>
       <? } ?>

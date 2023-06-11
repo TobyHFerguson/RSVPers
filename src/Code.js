@@ -12,12 +12,15 @@ function doGet(e) {
 
 }
 
-function getEventData(event) {
-  const title = 'My Event Title: ' + (event ? event : 0)
+function getEventData(e) {
+  const id = 222372
+  let rwgps = new RWGPS(new RWGPSService("toby.h.ferguson@icloud.com", "1rider1"));
+  const event = rwgps.get_event(Globals.EVENTS_URI + "/" + id);
+  const participants = rwgps.getParticipants(id);
   return {
-    'title': title,
-    'participants': ['Fred Astaire', 'John Smith'],
-    'leaders': ['John Smith']
+    'name': event.name,
+    'participants': participants,
+    'leaders': ['Jane Ferguson']
   }
 }
 
@@ -27,16 +30,4 @@ function myFunction() {
     .getCode());
 }
 
-function testThis() {
-  x = {
-    'participants': ['Fred Astaire', 'John Smith'],
-    'leaders': ['John Smith']
-  }
-  x.participants.forEach(p => {
-    if (x.leaders.includes(p)) {
-      console.log(p)
-    } else {
-      console.log('no');
-    }
-  })
-}
+
