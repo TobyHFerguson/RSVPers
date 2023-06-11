@@ -12,23 +12,51 @@ class RWGPS {
   constructor(rwgpsService) {
     this.rwgpsService = rwgpsService;
   }
-  getParticipants(event_id) {
-    const url = Globals.EVENTS_URI + event_id + "/participants.json";
-    const r = this.rwgpsService.get(url);
-    const body = r.getContentText();
-    const json = JSON.parse(body);
-    const yes = json.filter(p => {
-      return p.rsvp_status.toLowerCase() === "yes" && (p.first_name.length || p.last_name.length)
-    })
-    const result = yes.
-      map(p => {return { first_name: p.first_name, last_name: p.last_name }})
-    const sorted = result.sort((l, r) => {
+  getRSVPObject(event_id) {
+    function compareNames(l, r) {
       const a = (l.last_name + l.first_name).toLowerCase()
       const b = (r.last_name + r.first_name).toLowerCase()
-      const result =  a < b ? -1 : a > b ? 1 : 0 
+      const result = a < b ? -1 : a > b ? 1 : 0
       return result;
+    }
+    const e_url = Globals.EVENTS_URI + event_id
+    const p_url = e_url + "/participants.json";
+    const o_url = e_url + "/organizer_ids.json";
+    const responses = this.rwgpsService.getAll([e_url, p_url, o_url])
+    let participants = this.getParticipants(responses[1]);
+    const leaders = this.getLeaderNames(responses[2]);
+    participants.forEach(p => {
+      const li = leaders.findIndex(l => {
+        compareNames(l, p) === 0;
+      });
+      if (li !== -1) {
+        p.leader = true;
+        leaders.splice(li, 1)
+      }
     })
-    return sorted
+    participants = participants.concat(leaders).sort(compareNames)
+
+
+    const rsvpObject = {
+      name: JSON.parse(responses[0].getContentText())["event"]["name"],
+      participants: participants
+    }
+    return rsvpObject
+  }
+  getLeaderNames(response) {
+    const body = response.getContentText();
+    const json = JSON.parse(body);
+    return json.filter(o => o.id !== Globals.RIDE_LEADER_TBD_ID).map(o => {
+      const n = o.text.split(' ')
+      return { first_name: n[0], last_name: n[1], leader: true}
+    })
+  }
+  getParticipants(response) {
+    const body = response.getContentText();
+    const json = JSON.parse(body);
+    return json.filter(p => {
+      return p.rsvp_status.toLowerCase() === "yes" && (p.first_name.length || p.last_name.length)
+    }).map(p => { return { first_name: p.first_name, last_name: p.last_name } })
   }
   /**
    * Return the counts for each of the given event urls.
@@ -920,14 +948,10 @@ function testLookupOrganizer() {
 }
 
 function testGetRSVPObject() {
-  const id = 222372
+  const id = 215744
   let rwgps = new RWGPS(new RWGPSService("toby.h.ferguson@icloud.com", "1rider1"));
-  const event = rwgps.get_event(Globals.EVENTS_URI + "/" + id);
-  const rsvpers = {
-    "title": event.name
-  }
-  const participants = rwgps.getParticipants(id);
-  console.log(participants);
+  const rsvpObject = rwgps.getRSVPObject(id);
+  console.log(rsvpObject);
 }
 if (typeof module !== 'undefined') {
   module.exports = RWGPS;

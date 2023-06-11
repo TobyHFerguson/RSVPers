@@ -1,22 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <base target="_top">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-  </head>
-  <h1><?= event.name ?></h1>
-  <body>
-    <table>
-      <? for (var i = 0; i < event.participants.length; i++) { ?>
-        <tr>
-          <td>
+
+<head>
+  <base target="_top">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<h1>
+  <?= event.name ?>
+</h1>
+
+<body>
+  <table>
+    <? for (var i = 0; i < event.participants.length; i++) { 
+        let p = event.participants[i] 
+        ?>
+    <tr>
+      <td>
+        <? if (p.leader)  { ?>
+          <b>
               <?= event.participants[i].first_name ?>
-          </td>
-          <td>
+          <b>
+            <? } else { ?> 
+            <?= event.participants[i].first_name ?>
+            <? } ?>
+      </td>
+      <td>
+        <? if (p.leader)  { ?>
+          <b>
               <?= event.participants[i].last_name ?>
-          </td>
-        </tr>
-      <? } ?>
-    </table>
-  </body>
+          <b>
+            <? } else { ?> 
+            <?= event.participants[i].last_name ?>
+            <? } ?>
+      </td>
+    </tr>
+    <? } ?>
+  </table>
+</body>
+
 </html>

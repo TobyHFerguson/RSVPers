@@ -13,15 +13,9 @@ function doGet(e) {
 }
 
 function getEventData(e) {
-  const id = 222372
+  const id = 215744
   let rwgps = new RWGPS(new RWGPSService("toby.h.ferguson@icloud.com", "1rider1"));
-  const event = rwgps.get_event(Globals.EVENTS_URI + "/" + id);
-  const participants = rwgps.getParticipants(id);
-  return {
-    'name': event.name,
-    'participants': participants,
-    'leaders': ['Jane Ferguson']
-  }
+  return rwgps.getRSVPObject(id)
 }
 
 function myFunction() {
