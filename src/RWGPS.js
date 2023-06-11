@@ -13,6 +13,36 @@ class RWGPS {
     this.rwgpsService = rwgpsService;
   }
   getRSVPObject(event_id) {
+    function getEventName(response) {
+      if (response.getResponseCode() !== 200) {
+        console.log(`Response code: ${response.getResponseCode()} body: ${response.getContentText()}`)
+        return `Event ${event_id} not found`
+      }
+      return JSON.parse(response.getContentText())["event"]["name"]
+    }
+    function getParticipants(response) {
+      if (response.getResponseCode() !== 200) {
+        console.log(`Response code: ${response.getResponseCode()} body: ${response.getContentText()}`)
+        return []
+      }
+      const body = response.getContentText();
+      const json = JSON.parse(body);
+      return json.filter(p => {
+        return p.rsvp_status.toLowerCase() === "yes" && (p.first_name.length || p.last_name.length)
+      }).map(p => { return { first_name: p.first_name, last_name: p.last_name } })
+    }
+    function getLeaderNames(response) {
+      if (response.getResponseCode() !== 200) {
+        Logger.log(`Response code: ${response.getResponseCode()} body: ${response.getContentText()}`)
+        return []
+      }
+      const body = response.getContentText();
+      const json = JSON.parse(body);
+      return json.filter(o => o.id !== Globals.RIDE_LEADER_TBD_ID).map(o => {
+        const n = o.text.split(' ')
+        return { first_name: n[0], last_name: n[1], leader: true }
+      })
+    }
     function compareNames(l, r) {
       const a = (l.last_name + l.first_name).toLowerCase()
       const b = (r.last_name + r.first_name).toLowerCase()
@@ -23,8 +53,8 @@ class RWGPS {
     const p_url = e_url + "/participants.json";
     const o_url = e_url + "/organizer_ids.json";
     const responses = this.rwgpsService.getAll([e_url, p_url, o_url])
-    let participants = this.getParticipants(responses[1]);
-    const leaders = this.getLeaderNames(responses[2]);
+    let participants = getParticipants(responses[1]);
+    const leaders = getLeaderNames(responses[2]);
     participants.forEach(p => {
       const li = leaders.findIndex(l => {
         compareNames(l, p) === 0;
@@ -38,26 +68,13 @@ class RWGPS {
 
 
     const rsvpObject = {
-      name: JSON.parse(responses[0].getContentText())["event"]["name"],
+      name: getEventName(responses[0]),
       participants: participants
     }
     return rsvpObject
   }
-  getLeaderNames(response) {
-    const body = response.getContentText();
-    const json = JSON.parse(body);
-    return json.filter(o => o.id !== Globals.RIDE_LEADER_TBD_ID).map(o => {
-      const n = o.text.split(' ')
-      return { first_name: n[0], last_name: n[1], leader: true}
-    })
-  }
-  getParticipants(response) {
-    const body = response.getContentText();
-    const json = JSON.parse(body);
-    return json.filter(p => {
-      return p.rsvp_status.toLowerCase() === "yes" && (p.first_name.length || p.last_name.length)
-    }).map(p => { return { first_name: p.first_name, last_name: p.last_name } })
-  }
+
+
   /**
    * Return the counts for each of the given event urls.
    * A count of 0 is given for any url that throws an error, and a log message is recorded.

@@ -12,8 +12,7 @@ function doGet(e) {
 
 }
 
-function getEventData(e) {
-  const id = 215744
+function getEventData(id) {
   let rwgps = new RWGPS(new RWGPSService("toby.h.ferguson@icloud.com", "1rider1"));
   return rwgps.getRSVPObject(id)
 }
@@ -22,6 +21,11 @@ function myFunction() {
   Logger.log(HtmlService
     .createTemplateFromFile('Index')
     .getCode());
+}
+
+function testEventId() {
+  const id = 222858;
+  console.log(getEventData(id))
 }
 
 
