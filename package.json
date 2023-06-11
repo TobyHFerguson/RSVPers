@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:push": "npx clasp-env --folder . --scriptId 1e3aJEQExwftOIAQ7djftK3FfD5akZuSKJE4eIr-9kIWS-aLCKisMRSAX && clasp push -w",
+    "dev:pull": "npx clasp-env --folder . --scriptId 1e3aJEQExwftOIAQ7djftK3FfD5akZuSKJE4eIr-9kIWS-aLCKisMRSAX & clasp pull",
+    "prod:push": "npx clasp-env --folder . --scriptId PROD_SCRIPT_ID && clasp push",
+    "prod:pull": "npx clasp-env --folder . --scriptId PROD_SCRIPT_ID & clasp pull"
   },
   "keywords": [],
   "author": "",
