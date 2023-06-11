@@ -719,7 +719,7 @@ function printTimings_(times, prefix) {
 
 //=========== Tests ===========
 function testGetRSVPCounts() {
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   const rwgps = new RWGPS(rwgpsService);
   const test_cases = [
     ['https://ridewithgps.com/events/196660-copied-event', 15],
@@ -736,7 +736,7 @@ function testGetRSVPCounts() {
   })
 }
 function testGetEvents() {
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   const rwgps = new RWGPS(rwgpsService);
   const events = rwgps.get_events([Globals.A_TEMPLATE, Globals.B_TEMPLATE]);
   if (!(events.length == 2)) console.log("didn't get the expected number of events");
@@ -744,7 +744,7 @@ function testGetEvents() {
 function testEditEvents() {
   const NUMTESTS = 1;
   const NUMEVENTS = 5;
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   const rwgps = new RWGPS(rwgpsService);
   function createTestEvents() {
     const urls = [];
@@ -802,7 +802,7 @@ function testGetAll() {
     return new Date() - start;
   }
 
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   const events = ['https://ridewithgps.com/events/198070', 'https://ridewithgps.com/events/196909'];
   const urls = [];
   let timings = [];
@@ -820,7 +820,7 @@ function testGetAll() {
 }
 //------------------------------
 // function testEditNameOnly() {
-//   const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+//   const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
 //   const rwgps = new RWGPS(rwgpsService);
 //   const event_URL = rwgps.copy_template_("https://ridewithgps.com/events/196961-test-event");
 //   console.log(`New Event URL: ${event_URL}`);
@@ -847,7 +847,7 @@ function testEditEvent() {
     start_time: '21899-12-30T10:00.000-08:00',
     visibility: 0,
   }
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   const rwgps = new RWGPS(rwgpsService);
   const event_URL = rwgps.copy_template_("https://ridewithgps.com/events/194877");
   console.log(`New Event URL: ${event_URL}`);
@@ -856,14 +856,14 @@ function testEditEvent() {
 }
 // function testGetParticipants() {
 //   let rwgps, event_URL;
-//   const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+//   const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
 //   rwgps = new RWGPS(rwgpsService);
 
 // }
 function testRoundTrip() {
   let rwgps, event_URL;
   try {
-    const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+    const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
     rwgps = new RWGPS(rwgpsService);
     event_URL = rwgps.copy_template_("https://ridewithgps.com/events/196910");
     console.log(`New Event URL: ${event_URL}`);
@@ -888,14 +888,14 @@ function testRoundTrip() {
 }
 
 function testImportRoute() {
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   const rwgps = new RWGPS(rwgpsService);
   console.log(rwgps.importRoute('https://ridewithgps.com/routes/19551869'));
   console.log(rwgps.importRoute({ url: 'https://ridewithgps.com/routes/19551869', visibility: 2, name: "Toby's new route", expiry: '12/24/2022' }));
 }
 
 function testUdatingRouteExpiration() {
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   const rwgps = new RWGPS(rwgpsService);
   rwgps.setRouteExpiration("https://ridewithgps.com/routes/41365882", "11/22/2023");
   rwgps.setRouteExpiration("https://ridewithgps.com/routes/41365882", "11/23/2023");
@@ -909,7 +909,7 @@ function testUdatingRouteExpiration() {
   }
 }
 function testDeletingRouteExpiration() {
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   const rwgps = new RWGPS(rwgpsService);
   rwgps.setRouteExpiration("https://ridewithgps.com/routes/41365882", "11/22/2023");
   rwgps.setRouteExpiration("https://ridewithgps.com/routes/41365882");
@@ -919,7 +919,7 @@ function testDeletingRouteExpiration() {
   }
 }
 function testSetRouteExpiration() {
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   const rwgps = new RWGPS(rwgpsService);
   rwgps.setRouteExpiration("https://ridewithgps.com/routes/41365882", "11/22/2023");
   const tag_found = rwgps.getRouteObject("https://ridewithgps.com/routes/41365882").tag_names.includes("expires: 11/22/2023")
@@ -928,23 +928,23 @@ function testSetRouteExpiration() {
   }
 }
 function testTagEvents() {
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   rwgpsService.tagEvents(['189081'], ['Tobys Tag']);
 }
 function testUntagEvents() {
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   rwgpsService.unTagEvents(['189081'], ['Tobys Tag']);
 }
 function testUnTagRoutes() {
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   rwgpsService.unTagRoutes(['41365882'], ['Tobys Tag']);
 }
 function testTagRoutes() {
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   rwgpsService.tagRoutes(['41365882'], ['Tobys Tag']);
 }
 function testGetEvent() {
-  let rwgps = new RWGPS(new RWGPSService("toby.h.ferguson@icloud.com", "1rider1"));
+  let rwgps = new RWGPS(new RWGPSService(Credentials.username, Credentials.password));
   let url = "https://ridewithgps.com/events/189081-copied-event";
   const event = rwgps.get_event(url);
   Logger.log(event.starts_at);
@@ -954,7 +954,7 @@ function testGetEvent() {
 }
 
 function testLookupOrganizer() {
-  const rwgpsService = new RWGPSService('toby.h.ferguson@icloud.com', '1rider1');
+  const rwgpsService = new RWGPSService(Credentials.username, Credentials.password);
   const rwgps = new RWGPS(rwgpsService);
 
   const name = 'Peter Stanger';
@@ -966,7 +966,7 @@ function testLookupOrganizer() {
 
 function testGetRSVPObject() {
   const id = 215744
-  let rwgps = new RWGPS(new RWGPSService("toby.h.ferguson@icloud.com", "1rider1"));
+  let rwgps = new RWGPS(new RWGPSService(Credentials.username, Credentials.password));
   const rsvpObject = rwgps.getRSVPObject(id);
   console.log(rsvpObject);
 }

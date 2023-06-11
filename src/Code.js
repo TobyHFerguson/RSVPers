@@ -13,7 +13,7 @@ function doGet(e) {
 }
 
 function getEventData(id) {
-  let rwgps = new RWGPS(new RWGPSService("toby.h.ferguson@icloud.com", "1rider1"));
+  let rwgps = new RWGPS(new RWGPSService(Credentials.username, Credentials.password));
   return rwgps.getRSVPObject(id)
 }
 
