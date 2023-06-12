@@ -4,10 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:push": "npx clasp-env --folder . --scriptId 1e3aJEQExwftOIAQ7djftK3FfD5akZuSKJE4eIr-9kIWS-aLCKisMRSAX && clasp push -w",
-    "dev:pull": "npx clasp-env --folder . --scriptId 1e3aJEQExwftOIAQ7djftK3FfD5akZuSKJE4eIr-9kIWS-aLCKisMRSAX & clasp pull",
-    "prod:push": "npx clasp-env --folder . --scriptId PROD_SCRIPT_ID && clasp push",
-    "prod:pull": "npx clasp-env --folder . --scriptId PROD_SCRIPT_ID & clasp pull"
+    "push": "npx clasp-env --folder . --scriptId 1e3aJEQExwftOIAQ7djftK3FfD5akZuSKJE4eIr-9kIWS-aLCKisMRSAX && clasp push -w",
+    "pull": "npx clasp-env --folder . --scriptId 1e3aJEQExwftOIAQ7djftK3FfD5akZuSKJE4eIr-9kIWS-aLCKisMRSAX & clasp pull"
   },
   "keywords": [],
   "author": "",

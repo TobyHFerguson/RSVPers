@@ -24,7 +24,8 @@ function myFunction() {
 }
 
 function testEventId() {
-  const id = 222563;
+  let id = 222563; // Jacky Averill ride leader no name
+  id = 198803; // ride count says 10, but only 9 in rsvp list
   console.log(getEventData(id))
 }
 

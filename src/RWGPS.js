@@ -13,10 +13,13 @@ class RWGPS {
     this.rwgpsService = rwgpsService;
   }
   getRSVPObject(event_id) {
+    return this.getRSVPObjectByURL(Globals.EVENTS_URI + event_id)
+  }
+  getRSVPObjectByURL(e_url) {
     function getEventName(response) {
       if (response.getResponseCode() !== 200) {
         console.log(`Response code: ${response.getResponseCode()} body: ${response.getContentText()}`)
-        return `Event ${event_id} not found`
+        return JSON.parse(response.getContentText()).status
       }
       return JSON.parse(response.getContentText())["event"]["name"]
     }
@@ -31,7 +34,7 @@ class RWGPS {
         return p.rsvp_status.toLowerCase() === "yes" && (p.first_name.length || p.last_name.length)
       }).map(p => { return { first_name: p.first_name, last_name: p.last_name } })
     }
-    function getLeaderNames(response) {
+    function getLeaders(response) {
       if (response.getResponseCode() !== 200) {
         Logger.log(`Response code: ${response.getResponseCode()} body: ${response.getContentText()}`)
         return []
@@ -49,12 +52,11 @@ class RWGPS {
       const result = a < b ? -1 : a > b ? 1 : 0
       return result;
     }
-    const e_url = Globals.EVENTS_URI + event_id
     const p_url = e_url + "/participants.json";
     const o_url = e_url + "/organizer_ids.json";
     const responses = this.rwgpsService.getAll([e_url, p_url, o_url])
     let participants = getParticipants(responses[1]);
-    const leaders = getLeaderNames(responses[2]);
+    const leaders = getLeaders(responses[2]);
     participants.forEach(p => {
       const li = leaders.findIndex(l => {
         return compareNames(l, p) === 0;
@@ -65,7 +67,6 @@ class RWGPS {
       }
     })
     participants = participants.concat(leaders).sort(compareNames)
-
 
     const rsvpObject = {
       name: getEventName(responses[0]),
@@ -86,30 +87,7 @@ class RWGPS {
     if (!event_urls || event_urls.length === 0) {
       return [0]
     }
-    // rideLeaders is an array where each ride leader is a string of 'first last'. We need to remove the space
-
-    const urls = event_urls.map(url => url + "/participants.json");
-    const responses = this.rwgpsService.getAll(urls);
-    const counts = responses.map((r, i) => {
-      const body = r.getContentText();
-      const rls = rideLeaders && rideLeaders[i] ? rideLeaders[i].map(rl => rl.replaceAll(' ', '').toLowerCase()) : [];
-      try {
-        const participants = JSON.parse(body);
-        const riders = participants.filter(p => {
-          // Some names are returned with null for both first and last - we need to cope with that!
-          let name = `${p.first_name}${p.last_name}`;
-          name = name ? name.toLowerCase().replaceAll(' ', '') : name;
-          const result = p.rsvp_status === "Yes" && (name ? !(rls.includes(name)) : true);
-          return result;
-        })
-        const total = riders.length + rls.length
-        return total;
-      } catch (e) {
-        console.log(`RWGPS.getRSPVCounts() - Error: event_url ${urls[i]} had this body: ${body} which led to this error: ${e}`);
-        return 0;
-      }
-    });
-    return counts;
+    return event_urls.map(u => this.getRSVPObjectByURL(u).participants.length)
   }
 
   /**
