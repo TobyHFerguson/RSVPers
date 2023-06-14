@@ -26,6 +26,8 @@ function myFunction() {
 function testEventId() {
   let id = 222563; // Jacky Averill ride leader no name
   id = 198803; // ride count says 10, but only 9 in rsvp list
+  id = 222293; // Peter Stangar shows up twice, once without a last name!
+  id = 222134; // Caused a 'no such event' issue
   console.log(getEventData(id))
 }
 
