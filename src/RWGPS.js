@@ -24,7 +24,7 @@ class RWGPS {
     try {
       return this.getRSVPObjectByURL(Globals.EVENTS_URI + event_id)
     } catch (e) {
-      Logger.log(e)
+      console.log(e)
       return { name: `No such event: ${event_id}`, participants: []}
     }
   }
@@ -957,7 +957,7 @@ function testLookupOrganizer() {
 }
 
 function testGetRSVPObject() {
-  const id = 215744
+  const id = 222969
   let rwgps = new RWGPS(new RWGPSService(Credentials.username, Credentials.password));
   const rsvpObject = rwgps.getRSVPObject(id);
   console.log(rsvpObject);

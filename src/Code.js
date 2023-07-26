@@ -28,6 +28,7 @@ function testEventId() {
   id = 198803; // ride count says 10, but only 9 in rsvp list
   id = 222293; // Peter Stangar shows up twice, once without a last name!
   id = 222134; // Caused a 'no such event' issue
+  id = 222969; // Caused a 'no such event' issue when it shouldn't have. And nothing in the logs :-()
   console.log(getEventData(id))
 }
 
