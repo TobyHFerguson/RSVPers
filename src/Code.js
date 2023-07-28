@@ -13,7 +13,8 @@ function doGet(e) {
 }
 
 function getEventData(id) {
-  let rwgps = new RWGPS(new RWGPSService(Credentials.username, Credentials.password));
+  const s =  RWGPSlib.newRWGPSService(Credentials.username, Credentials.password, Globals);
+  let rwgps = new RWGPSlib.newRWGPS(s);
   return rwgps.getRSVPObject(id)
 }
 

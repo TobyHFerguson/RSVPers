@@ -1,10 +1,19 @@
 {
   "timeZone": "America/Los_Angeles",
-  "dependencies": {},
+  "dependencies": {
+    "libraries": [
+      {
+        "userSymbol": "RWGPSlib",
+        "version": "0",
+        "libraryId": "1LrtdhxRlvd3Ep5Z2M7KCrii6VlMiFLR8Q39X24y7qV-0DsBDl-76qivO",
+        "developmentMode": true
+      }
+    ]
+  },
   "exceptionLogging": "STACKDRIVER",
   "runtimeVersion": "V8",
   "webapp": {
     "executeAs": "USER_DEPLOYING",
-    "access": "ANYONE_ANONYMOUS"
+    "access": "MYSELF"
   }
 }
