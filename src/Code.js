@@ -12,10 +12,33 @@ function doGet(e) {
 
 }
 
+/**
+ * @typedef {Object} 
+ */
+/**
+ * @typedef {Object} RSVPObject
+ * @param {String} name name of the event
+ * @param {Participant[]} participants an array of the participants that have rsvp'd to the event
+ */
+/**
+ * 
+ * @param {number} id the event id
+ * @returns an RSVPObject
+ */
 function getEventData(id) {
   const s =  RWGPSlib.newRWGPSService(Credentials.username, Credentials.password, Globals);
   let rwgps = new RWGPSlib.newRWGPS(s);
-  return rwgps.getRSVPObject(id)
+  let rsvpObject = rwgps.getRSVPObject(id)
+  let newName = RWGPSlib.getEvent().updateCountInName(rsvpObject.name, rsvpObject.participants.length);
+  if (newName !== rsvpObject.name) {
+    rsvpObject.name = newName;
+    let scheduledRowURLs = [`https://ridewithgps.com/events/${id}`]
+    const rwgpsEvents = rwgps.get_events(scheduledRowURLs);
+    const scheduledEvents = rwgpsEvents.map(e => RWGPSlib.EventFactory(Globals).fromRwgpsEvent(e));
+    scheduledEvents[0].updateRiderCount(rsvpObject.participants.length);
+    rwgps.edit_events([{ url: scheduledRowURLs[0], event: scheduledEvents[0] }] )
+  }
+  return rsvpObject;
 }
 
 function myFunction() {
