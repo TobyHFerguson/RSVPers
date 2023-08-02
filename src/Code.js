@@ -21,7 +21,9 @@ function doGet(e) {
  * @param {Participant[]} participants an array of the participants that have rsvp'd to the event
  */
 /**
+ * Return the name of the event and the list of participants, as an RSVPObject
  * 
+ * This has the side effect of updating the event name iff the count recorded in the name differs from the participant count.
  * @param {number} id the event id
  * @returns an RSVPObject
  */
@@ -32,13 +34,21 @@ function getEventData(id) {
   let newName = RWGPSlib.getEvent().updateCountInName(rsvpObject.name, rsvpObject.participants.length);
   if (newName !== rsvpObject.name) {
     rsvpObject.name = newName;
-    let scheduledRowURLs = [`https://ridewithgps.com/events/${id}`]
-    const rwgpsEvents = rwgps.get_events(scheduledRowURLs);
-    const scheduledEvents = rwgpsEvents.map(e => RWGPSlib.EventFactory(Globals).fromRwgpsEvent(e));
-    scheduledEvents[0].updateRiderCount(rsvpObject.participants.length);
-    rwgps.edit_events([{ url: scheduledRowURLs[0], event: scheduledEvents[0] }] )
+    updateEventName(newName);
   }
   return rsvpObject;
+
+  /**
+   * Update the event name in RWGPS itself
+   * 
+   */
+  function updateEventName(newName) {
+    const scheduledRowURL = `https://ridewithgps.com/events/${id}`;
+    const e = rwgps.get_events([scheduledRowURL])[0];
+    const event = RWGPSlib.EventFactory(Globals).fromRwgpsEvent(e);
+    event.name = newName;
+    rwgps.edit_events([{ url: scheduledRowURL, event: event }]);
+  }
 }
 
 function myFunction() {
