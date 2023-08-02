@@ -13,9 +13,10 @@
     <h1>
       <?= event.name ?>
     </h1>
+      <hr>
     <? if (event.participants.length) { ?>
     <table class="table table-striped table-small caption-top">
-      <caption>Leaders are highlighted</caption>
+      <caption>Leaders are highlighted. <a href="https://docs.google.com/document/d/14GltSXO37x5QPol9k_K6m5D09mKHiliIdGVXxSn5NRU/edit?usp=sharing">How to Un-RSVP</a></caption>
       <thead>
         <tr>
           <th scope="col">First</th>
@@ -37,6 +38,8 @@
         <? } ?>
       </tbody>
     </table>
+    <? } else { ?>
+      <h2>No one has RSVP'd or signed up to be a leader yet<h2>
     <? } ?>
   </div>
 </body>
