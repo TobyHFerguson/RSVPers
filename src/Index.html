@@ -26,10 +26,11 @@
       <tbody>
         <? for (var i = 0; i < event.participants.length; i++) { 
         let p = event.participants[i]
+        let h = `"https://ridewithgps.com/users/${p.user_id}"`
         ?>
         <tr <?!=p.leader ? 'class="table-success"' : '' ?>>
           <td>
-            <?= p.first_name ?>
+           <a href=<?!= h ?>><?= p.first_name ?></a>
           </td>
           <td>
             <?= p.last_name ?>
